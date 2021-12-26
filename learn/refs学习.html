@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>refs learning</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <div id="test1"></div>
+    <div id="test2"></div>
+    <div id="test3"></div>
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.min.js"></script>
+    <script src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        // 字符串形式的refs，在标签上定义一个ref，则此标签会自动传入react组件的refs中，调用方法可以直接this.refs.xxx来调用
+        // 但是这种方法已经过时了，不推荐，效率低，一般用回调函数或者createRefs的方法
+        class Demo extends React.Component {
+            showData = () => {
+                const { input1 } = this.refs;
+                alert(input1.value);
+            }
+            render() {
+                return (
+                    <div>
+                        <input type="text" placeholder="点击按钮提示数据" ref="input1" />
+                        <button onClick={this.showData}>点我提示左侧数据</button>
+                        <input type="text" placeholder="失去焦点提示数据" />
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<Demo />, document.getElementById("test"))
+
+
+        // 回调函数的方式使用refs，在组件标签ref中使用一个回调函数，入参就是当前节点，这个回调函数其实只要做一件事
+        // 就是把入参，即当前结点传给this的一个属性，这样就可以在组件中使用这个属性来获取当前结点的信息。
+        // refs={currentNode=> this.xxx = currentNode}; const {xxx} = this; 这样，xxx就能获取到当前节点
+        class Demo1 extends React.Component {
+            showData = () => {
+                const { input1 } = this;
+                alert(input1.value);
+            }
+            render() {
+                return (
+                    <div>
+                        <input type="text" placeholder="点击按钮提示数据" ref="input1" />
+                        <button onClick={this.showData}>点我提示左侧数据</button>
+                        <input type="text" placeholder="失去焦点提示数据" ref={(currentNode) => { this.input1 = currentNode }} onBlur={this.showData} />
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<Demo1 />, document.getElementById("test1"))
+
+        class Demo2 extends React.Component {
+            saveInput = c => this.input1 = c;
+            showData = () => {
+                const { input1 } = this;
+                alert(input1.value);
+            }
+            render() {
+                return (
+                    <div>
+                        <input type="text" placeholder="失去焦点提示数据" ref={this.saveInput} onBlur={this.showData} />
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<Demo2 />, document.getElementById("test2"))
+
+
+        // 用createRef的方法的话，一个标签只能对应一个myRef，得自己多定义，因为myRef只有一个current能取到当前结点。
+        class Demo3 extends React.Component {
+            myRef1 = React.createRef();
+            myRef2 = React.createRef();
+            showData1 = () => {
+               alert(this.myRef1.current.value);
+            }
+            showData2 = () => {
+               alert(this.myRef2.current.value);
+            }
+            render() {
+                return (
+                    <div>
+                        <input type="text" placeholder="失去焦点提示数据" ref={this.myRef1} onBlur={this.showData1} />
+                        <input type="text" placeholder="失去焦点提示数据" ref={this.myRef2} onBlur={this.showData2} />
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<Demo3 />, document.getElementById("test3"))
+
+    </script>
+</body>
+
+</html>

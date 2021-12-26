@@ -7,19 +7,70 @@
 </head>
 
 <body>
-    <div id="test"></div>
+    <div id="test1"></div>
+    <div id="test2"></div>
+    <div id="test3"></div>
     <script src="../js/react.development.js"></script>
     <script src="../js/react-dom.development.js"></script>
     <script src="../js/babel.min.js"></script>
+    <script src="../js/prop-types.js"></script>
     <script type="text/babel">
         class Person extends React.Component {
-
+            render() {
+                const { name, age, sex } = this.props;
+                return (
+                    <ul>
+                        <li>name :{name}</li>
+                        <li>age :{age}</li>
+                        <li>sex :{sex}</li>
+                    </ul>
+                )
+            }
         }
 
+        const data = {
+            name: "yajima",
+            age: 20,
+            sex: "female"
+        }
+
+        // 组件标签中传递的属性可以传入组件的props中使用
         ReactDOM.render(
-            <Person />,
-            document.getElementById('test') 
+            <Person name="ayuileng" age="19" sex="male" />, document.getElementById('test1')
         )
+
+        // 用...运算符，可以直接传递对象进去
+        ReactDOM.render(
+            <Person {...data} />, document.getElementById('test2')
+        )
+
+
+        class Student extends React.Component {
+            render() {
+                const { name, age, sex } = this.props;
+                return (
+                    <ul>
+                        <li>name :{name}</li>
+                        <li>age :{age}</li>
+                        <li>sex :{sex}</li>
+                    </ul>
+                )
+            }
+        }
+
+        Student.propTypes = {
+            name: PropTypes.string.isRequired,
+            sex: PropTypes.string,
+            age: PropTypes.number
+        }
+
+        Student.defaultProps = {
+            sex: "默认男"
+        }
+        ReactDOM.render(
+            <Student name="ayuileng" age="19" sex="male" />, document.getElementById('test3')
+        )
+
 
     </script>
 </body>
