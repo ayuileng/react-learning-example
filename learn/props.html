@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>react learning</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.min.js"></script>
+    <script type="text/babel">
+        class Person extends React.Component {
+
+        }
+
+        ReactDOM.render(
+            <Person />,
+            document.getElementById('test') 
+        )
+
+    </script>
+</body>
+
+</html>

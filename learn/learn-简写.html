@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>react learning</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.min.js"></script>
+    <script type="text/babel">
+        class Weather extends React.Component {
+            state = { isHot: true };
+            changeWeather = () => {
+                this.setState({
+                    isHot: !this.state.isHot
+                })
+            }
+            render() {
+                return (
+                    <div onClick={this.changeWeather}>
+                        今天天气很{this.state.isHot ? '炎热' : '寒冷'}
+                    </div>
+                )
+            }
+        }
+        ReactDOM.render(
+            <Weather />,
+            document.getElementById('test')
+        )
+
+    </script>
+</body>
+
+</html>
