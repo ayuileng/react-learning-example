@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>生命周期</title>
+</head>
+
+<body>
+    <div id="test"></div>
+
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.min.js"></script>
+    <script src="../js/prop-types.js"></script>
+    <script type="text/babel">
+    
+        // 组件生命周期 旧版
+        // constructor：构造器
+        // componentWillMount：组件在被挂在之前调用
+        // render：组件在加载时首次渲染，或者之后更新状态重新渲染时调用
+        // componentDidMount：当组件加载完成之后调用
+        // componentWillUnmount：组件被卸载之前调用
+        // shouldComponentUpdate：控制setState之后是否要重新更新状态渲染的hook，
+        //     默认返回true，即state更新之后就要render一次，如果返回的false，那么即使state发生变化，也不会重新render
+        // componentWillUpdate/componentDidUpdate：组件更新前，更新后，中间会穿插render。可以直接调用forceUpdate来强制更新，不一定state变化才更新
+        // componentWillReceiveProps：组件接收父组件传下来的参数(也就是props)前（第一次传的不算，后面改了 才算）
+    
+        class Life extends React.Component {
+            state = {
+                opacity: 0.5
+            }
+
+            death = () => {
+                ReactDOM.unmountComponentAtNode(document.getElementById("test"))
+            }
+
+
+            // 组件挂载完毕之后调用一次
+            componentDidMount() {
+                this.timer = setInterval(
+                    () => {
+                        console.log("aaa");
+                        let { opacity } = this.state;
+                        opacity -= 0.1;
+                        if (opacity <= 0) {
+                            opacity = 1;
+                        }
+                        this.setState({ opacity: opacity });
+                    }, 200
+                )
+            }
+
+            // 组件卸载前
+            componentWillUnmount() {
+                clearInterval(this.timer);
+            }
+
+            // 初始化渲染，或者更新状态之后会渲染
+            render() {
+                return (
+                    <div>
+                        <h2 style={{ opacity: this.state.opacity }}>React 学不会怎么办</h2>
+                        <button onClick={this.death}>不活了</button>
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<Life />, document.getElementById("test"))
+
+
+    </script>
+</body>
+
+</html>

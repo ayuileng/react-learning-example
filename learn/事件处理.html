@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>refs learning</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.min.js"></script>
+    <script src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        class Demo extends React.Component {
+            myRef1 = React.createRef();
+            showData1 = () => {
+                alert(this.myRef1.current.value);
+            }
+            showData2 = (event) => {
+                alert(event.target.value);
+            }
+            render() {
+                return (
+                    <div>
+                        <input type="text" ref={this.myRef1} onBlur={this.showData1} />
+                        <input type="text" onBlur={this.showData2} />
+                    </div>
+                )
+            }
+        }
+
+        // 尽量避免乱用ref，发生事件的元素刚好是要操作的元素，就可以省略ref，直接传一个函数进去就行
+        // 函数可以接收一个event参数，event.target可以拿到目标dom元素
+
+        ReactDOM.render(<Demo />, document.getElementById("test"))
+
+    </script>
+</body>
+
+</html>

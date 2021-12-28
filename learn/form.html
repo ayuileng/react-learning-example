@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>表单</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <div id="test1"></div>
+    <div id="test2"></div>
+    <div id="test3"></div>
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.min.js"></script>
+    <script src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        // 非受控组件：dom中所有输入数据的组件，现用现取值，那就是非受控组件
+        class Demo extends React.Component {
+            handleSubmit = (event) => {
+                event.preventDefault();
+                const { username, password } = this;
+                alert(`input username:${username.value}; input password:${password.value}`);
+            }
+            render() {
+                return (
+                    <form onSubmit={this.handleSubmit}>
+                        username: <input ref={c => this.username = c} type="text" name="username" />
+                        password: <input ref={c => this.password = c} type="password" name="password" />
+                        <button>登录</button>
+                    </form>
+                )
+            }
+        }
+        ReactDOM.render(<Demo />, document.getElementById("test"))
+
+
+        // 受控组件，就是说把输入组件的数据随时随地保存在state中，维护起来的，就是受控组件
+        // 尽量使用受控组件，因为在state中维护数据比较方便，而且这样能减少ref的使用
+        class Demo1 extends React.Component {
+            state = {
+                username: "",
+                password: ""
+            }
+            saveUsername = (event) => {
+                this.setState({ username: event.target.value })
+            }
+            savePassword = (event) => {
+                this.setState({ password: event.target.value })
+            }
+            handleSubmit = (event) => {
+                event.preventDefault();
+                const { username, password } = this.state;
+                alert(`input username:${username}; input password:${password}`);
+            }
+            render() {
+                return (
+                    <form onSubmit={this.handleSubmit}>
+                        username: <input onChange={this.saveUsername} type="text" name="username" />
+                        password: <input onChange={this.savePassword} type="password" name="password" />
+                        <button>登录</button>
+                    </form>
+                )
+            }
+        }
+        ReactDOM.render(<Demo1 />, document.getElementById("test1"))
+
+
+        // 高阶函数：参数里面传一个函数，或者返回一个函数就算
+        // 柯里化：通过函数调用继续返回函数的方式，实现多次接收参数最后统一处理的函数。例子其实就是saveData函数
+        // 其中第一层是传入dataType，这个是我们自己传入的，里面调用的函数是给react调用的，
+        // 传入的参数是react帮我们设置好的event，最后实现的效果是，在最里层统一实现对dataType和event的使用
+        class Demo2 extends React.Component {
+            state = {
+                username: "",
+                password: ""
+            }
+            // 此处的setState方法中，对于变量指定的key，访问的时候要加[]访问符，类似于hashMap[key]的这种访问方式
+            saveData = (dataType) => {
+                return (event) => {
+                    this.setState({ [dataType]: event.target.value })
+                }
+            }
+            handleSubmit = (event) => {
+                event.preventDefault();
+                const { username, password } = this.state;
+                alert(`input username:${username}; input password:${password}`);
+            }
+            render() {
+                return (
+                    <form onSubmit={this.handleSubmit}>
+                        username: <input onChange={this.saveData('username')} type="text" name="username" />
+                        password: <input onChange={this.saveData('password')} type="password" name="password" />
+                        <button>登录</button>
+                    </form>
+                )
+            }
+        }
+        ReactDOM.render(<Demo2 />, document.getElementById("test2"))
+
+
+
+
+        class Demo3 extends React.Component {
+            state = {
+                username: "",
+                password: ""
+            }
+            saveData = (dataType, event) => {
+                this.setState({ [dataType]: event.target.value })
+            }
+            handleSubmit = (event) => {
+                event.preventDefault();
+                const { username, password } = this.state;
+                alert(`input username:${username}; input password:${password}`);
+            }
+            // 在react中，交给onChange这类事件的必须是一个函数，也就是onChange={function}，
+            // 需要保证里面的是一个函数，或者里面是一个函数执行的结果，这个结果也是一个函数
+            render() {
+                return (
+                    <form onSubmit={this.handleSubmit}>
+                        username: <input onChange={(event) => { this.saveData('username', event) }} type="text" name="username" />
+                        password: <input onChange={(event) => { this.saveData('password', event) }} type="password" name="password" />
+                        <button>登录</button>
+                    </form>
+                )
+            }
+        }
+        ReactDOM.render(<Demo3 />, document.getElementById("test3"))
+    </script>
+</body>
+
+</html>

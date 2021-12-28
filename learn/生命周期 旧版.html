@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>生命周期</title>
+</head>
+
+<body>
+    <div id="test"></div>
+
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.min.js"></script>
+    <script src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        class Count extends React.Component {
+            state = {
+                sum: 0
+            }
+            addNum = () => {
+                this.setState(
+                    {
+                        sum: this.state.sum + 1
+                    }
+                )
+            }
+            render() {
+                return (
+                    <div>
+                        <h2>当前求和为:{this.state.sum}</h2>
+                        <button onClick={this.addNum}>点我+1</button>
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<Count />, document.getElementById("test"))
+    </script>
+</body>
+
+</html>
